@@ -1,0 +1,15 @@
+
+<Context>
+    <Resource
+        name="jdbc/board"
+        auth="Container"
+        type="javax.sql.DataSource"
+        driverClassName="com.mysql.cj.jdbc.Driver"
+        url="jdbc:mysql://localhost:3306/board?serverTimezone=Asia/Seoul&amp;characterEncoding=UTF-8"
+        username="board"
+        password="1234"
+        maxTotal="20"
+        maxIdle="10"
+        maxWaitMillis="10000"
+    />
+</Context>
