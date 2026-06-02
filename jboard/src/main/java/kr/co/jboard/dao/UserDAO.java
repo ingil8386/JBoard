@@ -274,4 +274,158 @@ public class UserDAO extends DBHelper {
 
         return result;
     }
+    
+    public int selectCountUserId(String userid) {
+
+        int count = 0;
+
+        Connection conn = null;
+        PreparedStatement psmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+
+            psmt = conn.prepareStatement(SQL.SELECT_COUNT_USERID);
+            psmt.setString(1, userid);
+
+            rs = psmt.executeQuery();
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        } finally {
+            close(rs, psmt, conn);
+        }
+
+        return count;
+    }
+    
+    public int selectCountNick(String nick) {
+
+        int count = 0;
+
+        Connection conn = null;
+        PreparedStatement psmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+
+            psmt = conn.prepareStatement(SQL.SELECT_COUNT_NICK);
+            psmt.setString(1, nick);
+
+            rs = psmt.executeQuery();
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        } finally {
+            close(rs, psmt, conn);
+        }
+
+        return count;
+    }
+    
+    
+    public String selectUserIdByNameEmail(String name, String email) {
+
+        String userid = null;
+
+        Connection conn = null;
+        PreparedStatement psmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+
+            psmt = conn.prepareStatement(SQL.SELECT_USERID_BY_NAME_EMAIL);
+            psmt.setString(1, name);
+            psmt.setString(2, email);
+
+            rs = psmt.executeQuery();
+
+            if (rs.next()) {
+                userid = rs.getString("userid");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        } finally {
+            close(rs, psmt, conn);
+        }
+
+        return userid;
+    }
+    
+    public String selectEmailByUserId(String userid) {
+
+        String email = null;
+
+        Connection conn = null;
+        PreparedStatement psmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+
+            psmt = conn.prepareStatement(SQL.SELECT_EMAIL_BY_USERID);
+            psmt.setString(1, userid);
+
+            rs = psmt.executeQuery();
+
+            if (rs.next()) {
+                email = rs.getString("email");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        } finally {
+            close(rs, psmt, conn);
+        }
+
+        return email;
+    }
+    
+    
+    public int updateUserPassword(String userid, String pass) {
+
+        int result = 0;
+
+        Connection conn = null;
+        PreparedStatement psmt = null;
+
+        try {
+            conn = getConnection();
+
+            psmt = conn.prepareStatement(SQL.UPDATE_USER_PASSWORD);
+            psmt.setString(1, pass);
+            psmt.setString(2, userid);
+
+            result = psmt.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        } finally {
+            close(psmt, conn);
+        }
+
+        return result;
+    }
+    
+    
+    
+    
+    
 }

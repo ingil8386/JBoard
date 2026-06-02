@@ -54,4 +54,8 @@ public class ArticleService {
         return dao.selectArticles(start);
     }
     
+    public List<ArticleDTO> selectSearchArticles(String searchType, String keyword) {
+        return dao.selectSearchArticles(searchType, keyword);
+    }
+    
 }

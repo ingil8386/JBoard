@@ -20,6 +20,9 @@ public class ArticleDAO extends DBHelper {
 
     private ArticleDAO() {
     }
+    
+    
+    
 
     public int insertArticle(ArticleDTO article) {
 
@@ -295,6 +298,60 @@ public class ArticleDAO extends DBHelper {
 
             psmt = conn.prepareStatement(SQL.SELECT_ARTICLES);
             psmt.setInt(1, start);
+
+            rs = psmt.executeQuery();
+
+            while (rs.next()) {
+                ArticleDTO article = new ArticleDTO();
+
+                article.setAno(rs.getInt("ano"));
+                article.setType(rs.getString("type"));
+                article.setTitle(rs.getString("title"));
+                article.setContent(rs.getString("content"));
+                article.setComment(rs.getInt("comment"));
+                article.setFile(rs.getInt("file"));
+                article.setHit(rs.getInt("hit"));
+                article.setWriter(rs.getString("writer"));
+                article.setRegip(rs.getString("regip"));
+                article.setWdate(rs.getString("wdate"));
+
+                articles.add(article);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        } finally {
+            close(rs, psmt, conn);
+        }
+
+        return articles;
+    }
+    
+    
+    
+    public List<ArticleDTO> selectSearchArticles(String searchType, String keyword) {
+
+        List<ArticleDTO> articles = new ArrayList<>();
+
+        Connection conn = null;
+        PreparedStatement psmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+
+            if ("title".equals(searchType)) {
+                psmt = conn.prepareStatement(SQL.SELECT_SEARCH_ARTICLES_BY_TITLE);
+            } else if ("content".equals(searchType)) {
+                psmt = conn.prepareStatement(SQL.SELECT_SEARCH_ARTICLES_BY_CONTENT);
+            } else if ("writer".equals(searchType)) {
+                psmt = conn.prepareStatement(SQL.SELECT_SEARCH_ARTICLES_BY_WRITER);
+            } else {
+                psmt = conn.prepareStatement(SQL.SELECT_SEARCH_ARTICLES_BY_TITLE);
+            }
+
+            psmt.setString(1, "%" + keyword + "%");
 
             rs = psmt.executeQuery();
 

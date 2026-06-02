@@ -19,6 +19,8 @@ public class InfoController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
+    private UserDAO dao = UserDAO.getInstance();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -29,7 +31,6 @@ public class InfoController extends HttpServlet {
         HttpSession session = req.getSession();
         UserDTO sessUser = (UserDTO) session.getAttribute("sessUser");
 
-        // 로그인 안 한 상태면 로그인 페이지로 이동
         if (sessUser == null) {
             PrintWriter out = resp.getWriter();
 
@@ -42,11 +43,8 @@ public class InfoController extends HttpServlet {
             return;
         }
 
-        // DB에서 최신 회원정보 다시 조회
-        UserDAO dao = UserDAO.getInstance();
         UserDTO user = dao.selectUserById(sessUser.getUserid());
 
-        // info.jsp로 회원정보 전달
         req.setAttribute("user", user);
 
         RequestDispatcher dispatcher =
@@ -65,7 +63,6 @@ public class InfoController extends HttpServlet {
         HttpSession session = req.getSession();
         UserDTO sessUser = (UserDTO) session.getAttribute("sessUser");
 
-        // 로그인 안 한 상태면 로그인 페이지로 이동
         if (sessUser == null) {
             PrintWriter out = resp.getWriter();
 
@@ -101,14 +98,11 @@ public class InfoController extends HttpServlet {
         user.setAddr1(addr1);
         user.setAddr2(addr2);
 
-        UserDAO dao = UserDAO.getInstance();
         int result = dao.updateUser(user);
 
         PrintWriter out = resp.getWriter();
 
         if (result > 0) {
-
-            // 수정된 회원정보를 다시 조회해서 세션도 최신 정보로 갱신
             UserDTO updatedUser = dao.selectUserById(userid);
             session.setAttribute("sessUser", updatedUser);
 
@@ -116,10 +110,9 @@ public class InfoController extends HttpServlet {
             out.println("alert('회원정보가 수정되었습니다.');");
             out.println("location.href='" + req.getContextPath() + "/user/info.do';");
             out.println("</script>");
-
         } else {
             out.println("<script>");
-            out.println("alert('회원정보 수정에 실패했습니다. 다시 시도해주세요.');");
+            out.println("alert('회원정보 수정에 실패했습니다.');");
             out.println("history.back();");
             out.println("</script>");
         }
